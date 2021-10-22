@@ -1,7 +1,5 @@
 use std::fmt::{self, Display};
 
-
-
 struct Block {
     index: u64,
     previus_hash: String,
