@@ -1,10 +1,11 @@
 #[macro_use]
 extern crate derive_new;
 
+
 use std::{fmt::{self, Debug, Display}};
-use chrono::{DateTime, Utc};
+
 use serde::{Serialize, Deserialize};
-use std::time::Instant;
+
 
 
 #[derive(Serialize, Deserialize,Debug, Clone)]
@@ -50,7 +51,7 @@ impl Display for Transaction {
 //         }
 //     }
 // }
-trait Create_block {
+trait Createblock {
     fn new(
         index: u64,
         previus_hash: String,
@@ -60,7 +61,7 @@ trait Create_block {
         proof: u128,
     ) -> Self;
 }
-impl Create_block for Block {
+impl Createblock for Block {
     fn new(
         index: u64,
         previus_hash: String,
@@ -79,10 +80,10 @@ impl Create_block for Block {
         }
     }
 }
-trait blockchain {
+trait Blockchain {
     fn new() -> Self;
 }
-impl blockchain for BlockChain {
+impl Blockchain for BlockChain {
     fn new() -> BlockChain {
         BlockChain {
             blocks: Vec::new(),
@@ -172,50 +173,30 @@ fn calculate_hash_proof(
     let steps: u128 = std::u128::MAX;
     let mut i = 0;
     for x in 0..steps {
-        // let mut s = hasher.clone();
+
         if format!("{:02x}", hasher.clone().finalize())[..proof.len()] == proof {
-            // println!("{} difficulty: {}",format!("{:02x}",hasher.clone().finalize()), x);
+            println!("Mined! : {} difficulty: {}",format!("{:02x}",hasher.clone().finalize()), x);
             i = x;
             break;
         } else {
-            // println!("{:02x}", hasher.clone().finalize());
+
             hasher.update(x.to_string().as_bytes());
         }
-        // if x%1000000 == 0 { println!("{}",x)}
+
     }
     (format!("{:02x}", hasher.finalize()), i)
 }
 fn main() {
-    // println!("{}",calculate_hash(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()]))
-    // let first = Block {
-    //     index: 0,
-    //     previus_hash: "None".to_string(),
-    //     timestamp: std::time::Instant::now(),
-    //     data: vec!["sss send 2 to yyy".to_string()],
-    //     hash: None
-    // };
-    // let sx: Block = Create_block::new(0, "None".to_string(), std::time::Instant::now(), vec!["ss".to_string()], None);
-    // println!("{}",sx);
-    // for _ in 0..10000 {
-    // println!("{}",calculate_hash(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()]))
-    // // }
-    // use sha2::{Sha512,Digest};
-    // let mut hasher = Sha512::new();
-    // let before = "qwerty";
-    // hasher.update(before.as_bytes());
 
-    // println!("{}",format!("{:02x}",hasher.finalize()));
-    let proof = "0";
-    let mut blockchin: BlockChain = blockchain::new();
+    let proof = "0ac8";
+    let mut blockchin: BlockChain = Blockchain::new();
     let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
     let time = chrono::offset::Utc::now().to_string();
     let calc = calculate_hash_proof(1, "".to_string(), time.clone(), vec![s.clone()], proof);
-    let start: Block = Create_block::new(1, "".to_string(), time, vec![s.clone()], calc.0, calc.1);
+    let start: Block = Createblock::new(1, "".to_string(), time, vec![s.clone()], calc.0, calc.1);
     blockchin.add_block_thirst(start);
     let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 20);
     blockchin.add_block(vec![s],proof);
-    println!("{:?}", serde::to_string(&blockchin));
-
-    // let (x,y) = calculate_hash_proof(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab0".to_string());
-    // println!("Mined {} Diff: {}",x,y);
+    let json = serde_json::to_string_pretty(&blockchin).unwrap();
+    println!("{}", json);
 }
