@@ -41,16 +41,18 @@ fn calculate_hash(index: u64, previus_hash: String, timestamp: std::time::Instan
     hasher.update(before.as_bytes());
     format!("{:02x}",hasher.finalize())
 }
-fn calculate_hash_proof(index: u64, previus_hash: String, timestamp: std::time::Instant, data: Vec<String>, proof: String) -> String {
+fn calculate_hash_proof(index: u64, previus_hash: String, timestamp: std::time::Instant, data: Vec<String>, proof: String) -> (String, u128) {
     use sha2::{Sha512,Digest};
     let mut hasher = Sha512::new();
     let before = index.to_string().parse::<String>().unwrap() + &previus_hash + &format!("{:?}",timestamp) + &format!("{:?}", data);
     hasher.update(before.as_bytes());
     let steps: u128 = std::u128::MAX;
+    let mut i = 0;
     for x in 0..steps {
         // let mut s = hasher.clone();
         if format!("{:02x}",hasher.clone().finalize())[..proof.len()] == proof {
-            println!("{} sssssssssss",format!("{:02x}",hasher.clone().finalize()));
+            // println!("{} difficulty: {}",format!("{:02x}",hasher.clone().finalize()), x);
+            i = x;
             break;
         } else {
             // println!("{:02x}", hasher.clone().finalize());
@@ -58,7 +60,7 @@ fn calculate_hash_proof(index: u64, previus_hash: String, timestamp: std::time::
         }
         if x%1000000 == 0 { println!("{}",x)}
     }
-    format!("{:02x}",hasher.finalize())
+    (format!("{:02x}",hasher.finalize()),i)
 }
 fn main() {
     // println!("{}",calculate_hash(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()]))
@@ -69,16 +71,19 @@ fn main() {
         data: vec!["sss send 2 to yyy".to_string()],
         hash: None
     };
-    let sx: Block = Create_block::new(0, "None".to_string(), std::time::Instant::now(), vec!["ss".to_string()], None);
-    println!("{}",sx);
+    // let sx: Block = Create_block::new(0, "None".to_string(), std::time::Instant::now(), vec!["ss".to_string()], None);
+    // println!("{}",sx);
     // for _ in 0..10000 {
         // println!("{}",calculate_hash(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()]))
-    // }
-    use sha2::{Sha512,Digest};
-    let mut hasher = Sha512::new();
-    let before = "qwerty";
-    hasher.update(before.as_bytes());
+    // // }
+    // use sha2::{Sha512,Digest};
+    // let mut hasher = Sha512::new();
+    // let before = "qwerty";
+    // hasher.update(before.as_bytes());
     
-    println!("{}",format!("{:02x}",hasher.finalize()));
-    println!("{}",calculate_hash_proof(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "babu".to_string()));
+    // println!("{}",format!("{:02x}",hasher.finalize()));
+    let (x,y) = calculate_hash_proof(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab".to_string());
+    println!("Mined {} {}",x,y);
+    
+
 }
