@@ -201,7 +201,7 @@ fn calculate_hash_proof(
     (format!("{:02x}", hasher.finalize()), i)
 }
 fn main() {
-    let proof = "abcde";
+    let proof = "b0";
     let mut blockchin: BlockChain = Blockchain::new();
     let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
     let time = chrono::offset::Utc::now().to_string();
@@ -211,10 +211,11 @@ fn main() {
     
     // end of starrt code
 
+
     let mut transactions = vec![];
 
-    for x in 0..=30 {
-        let a: Transaction = Transaction::new(x.to_string(), x.to_string(), x);
+    for x in 0..=9 {
+        let a: Transaction = Transaction::new(x.to_string(), (x+10).to_string(), x+100);
         transactions.push(a);
     }
 
