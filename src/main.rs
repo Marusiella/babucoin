@@ -226,7 +226,9 @@ fn main() {
     
     let json = serde_json::to_string_pretty(&blockchin).unwrap();
     println!("{}", json);
-    println!("{}", blockchin.is_good());
+    if blockchin.is_good() {
+        std::fs::write("json.json", json).expect("Unable to write file");
+    }
 }
 
 fn create_pending(blockchin: &mut BlockChain, proof: &str) {
