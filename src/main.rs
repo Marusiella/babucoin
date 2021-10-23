@@ -1,32 +1,66 @@
-use std::fmt::{self, Display};
+#[macro_use]
+extern crate derive_new;
 
-
+use std::fmt::{self, Debug, Display, write};
+#[derive(Debug, Clone)]
 struct Block {
     index: u64,
     previus_hash: String,
     timestamp: std::time::Instant,
-    data: Vec<String>,
-    hash: Option<String>
+    data: Vec<Transaction>,
+    hash: String,
+    proof: Option<u128>
 }
+#[derive(Debug, Clone)]
 struct BlockChain {
     blocks: Vec<Block>,
-    pending_transactions: Vec<String>
+    pending_transactions: Vec<Transaction>
 }
+#[derive(Debug, Clone, new)]
+
+    struct Transaction {
+    sender: String,
+    reciver: String,
+    amount: u64
+}
+// impl Debug for Transaction {
+//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+//         write!(f, "{}-{}-{}", self.sender, self.reciver, self.amount)
+//     }
+// }
+impl Display for Transaction {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}-{}-{}", self.sender, self.reciver, self.amount)
+    }
+}
+// trait NewTransaction {
+//     fn new(sender: String, reciver: String, amount: u64) -> Transaction;
+// }
+// impl NewTransaction for Transaction {
+//     fn new(sender: String, reciver: String, amount: u64) -> Transaction {
+//         Transaction {
+//             sender,
+//             reciver,
+//             amount
+//         }
+//     }
+// }
 trait Create_block {
     fn new (index: u64,
         previus_hash: String,
         timestamp: std::time::Instant,
-        data: Vec<String>,
-        hash: Option<String>) -> Self;
+        data: Vec<Transaction>,
+        hash: String) -> Self;
 }
 impl Create_block for Block {
-    fn new(index: u64, previus_hash: String, timestamp: std::time::Instant, data: Vec<String>, hash: Option<String>) -> Block {
+    fn new(index: u64, previus_hash: String, timestamp: std::time::Instant, data: Vec<Transaction>, hash: String) -> Block {
         Block {
             index,
             previus_hash,
             timestamp,
             data,
-            hash
+            hash,
+            proof: None
         }
 
     }
@@ -44,12 +78,25 @@ impl blockchain for BlockChain {
 }
 
 impl BlockChain {
-    fn add_block(&mut self, block: Block) {
+    fn add_block_thirst(&mut self, block: Block) {
         self.blocks.push(block);
     }
-    fn add_transaction(&mut self, transaction: String) {
+    fn add_transaction(&mut self, transaction: Transaction) {
         self.pending_transactions.push(transaction);
     }
+    fn add_block(&mut self, data: Vec<Transaction>){
+        let (calculate_hash, proof) = calculate_hash_proof(self.blocks.last().expect("Can't get previous block index").index + 1, self.blocks.last().expect("Can't get previous block hash").hash.clone(), std::time::Instant::now(), data.clone(), "bab".to_string());
+
+        self.add_block_thirst(Block{
+        index: self.blocks.last().expect("Can't get previous block index").index + 1,
+        previus_hash: self.blocks.last().expect("Can't get previous block hash").hash.clone(),
+        timestamp: std::time::Instant::now(),
+        data,
+        hash: calculate_hash,
+        proof: Some(proof)
+    })
+    }
+
 }
 
 impl Display for Block {
@@ -66,7 +113,7 @@ impl Display for Block {
 //     format!("{:02x}",hasher.finalize())
 // }
 
-fn calculate_hash_proof(index: u64, previus_hash: String, timestamp: std::time::Instant, data: Vec<String>, proof: String) -> (String, u128) {
+fn calculate_hash_proof(index: u64, previus_hash: String, timestamp: std::time::Instant, data: Vec<Transaction>, proof: String) -> (String, u128) {
     use sha2::{Sha512,Digest};
     let mut hasher = Sha512::new();
     let before = index.to_string().parse::<String>().unwrap() + &previus_hash + &format!("{:?}",timestamp) + &format!("{:?}", data);
@@ -89,13 +136,13 @@ fn calculate_hash_proof(index: u64, previus_hash: String, timestamp: std::time::
 }
 fn main() {
     // println!("{}",calculate_hash(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()]))
-    let first = Block {
-        index: 0,
-        previus_hash: "None".to_string(),
-        timestamp: std::time::Instant::now(),
-        data: vec!["sss send 2 to yyy".to_string()],
-        hash: None
-    };
+    // let first = Block {
+    //     index: 0,
+    //     previus_hash: "None".to_string(),
+    //     timestamp: std::time::Instant::now(),
+    //     data: vec!["sss send 2 to yyy".to_string()],
+    //     hash: None
+    // };
     // let sx: Block = Create_block::new(0, "None".to_string(), std::time::Instant::now(), vec!["ss".to_string()], None);
     // println!("{}",sx);
     // for _ in 0..10000 {
@@ -110,12 +157,15 @@ fn main() {
 
 
     let mut blockchin: BlockChain = blockchain::new();
-    let block: Block = Create_block::new(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], None);
-    blockchin.add_block(block);
+    let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
+    let block: Block = Create_block::new(1,"".to_string(),std::time::Instant::now(),vec![s.clone()], calculate_hash_proof(1,"".to_string(),std::time::Instant::now(),vec![s],"bab".to_string()).0);
+    blockchin.add_block_thirst(block);
+    let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 20);
+    blockchin.add_block(vec![s]);
+    println!("{:?}",blockchin);
 
-
-    let (x,y) = calculate_hash_proof(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab0".to_string());
-    println!("Mined {} Diff: {}",x,y);
+    // let (x,y) = calculate_hash_proof(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab0".to_string());
+    // println!("Mined {} Diff: {}",x,y);
     
 
 }
