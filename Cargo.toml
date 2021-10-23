@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 sha2 = "0.9.8"
 derive-new = "*"
+serde = { version = "*", features = ["derive"] }
+chrono = "*"
