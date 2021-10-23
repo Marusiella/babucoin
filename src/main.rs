@@ -154,9 +154,9 @@ fn calculate_hash_proof(
     data: Vec<Transaction>,
     proof: &str,
 ) -> (String, u128) {
-    use sha2::{Digest, Sha512};
+    use sha3::{Digest, Sha3_512};
     let proof = proof.to_owned();
-    let mut hasher = Sha512::new();
+    let mut hasher = Sha3_512::new();
     let before = index.to_string().parse::<String>().unwrap()
         + &previus_hash
         + &format!("{:?}", timestamp)
@@ -179,7 +179,7 @@ fn calculate_hash_proof(
     (format!("{:02x}", hasher.finalize()), i)
 }
 fn main() {
-    let proof = "b0";
+    let proof = "abcdefghij";
     let mut blockchin: BlockChain = Blockchain::new();
     let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
     let time = chrono::offset::Utc::now().to_string();

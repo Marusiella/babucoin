@@ -11,3 +11,4 @@ derive-new = "*"
 serde = { version = "*", features = ["derive"] }
 chrono = "*"
 serde_json = "*"
+actix-web = "3"

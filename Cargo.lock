@@ -16,7 +16,7 @@ dependencies = [
  "derive-new",
  "serde",
  "serde_json",
- "sha2",
+ "sha3",
 ]
 
 [[package]]
@@ -25,14 +25,15 @@ version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4152116fd6e9dadb291ae18fc1ec3575ed6d84c29642d97890f4b4a3417297e4"
 dependencies = [
+ "block-padding",
  "generic-array",
 ]
 
 [[package]]
-name = "cfg-if"
-version = "1.0.0"
+name = "block-padding"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+checksum = "8d696c370c750c948ada61c69a0ee2cbbb9c50b1019ddb86d9317157a99c2cae"
 
 [[package]]
 name = "chrono"
@@ -45,15 +46,6 @@ dependencies = [
  "num-traits",
  "time",
  "winapi",
-]
-
-[[package]]
-name = "cpufeatures"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "95059428f66df56b63431fdb4e1947ed2190586af5c5a8a8b71122bdf5a7f469"
-dependencies = [
- "libc",
 ]
 
 [[package]]
@@ -91,6 +83,12 @@ name = "itoa"
 version = "0.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b71991ff56294aa922b450139ee08b3bfc70982c6b2c7562771375cf73542dd4"
+
+[[package]]
+name = "keccak"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "67c21572b4949434e4fc1e1978b99c5f77064153c59d998bf13ecd96fb5ecba7"
 
 [[package]]
 name = "libc"
@@ -179,15 +177,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "sha2"
-version = "0.9.8"
+name = "sha3"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b69f9a4c9740d74c5baa3fd2e547f9525fa8088a8a958e0ca2409a514e33f5fa"
+checksum = "f81199417d4e5de3f04b1e871023acea7389672c4135918f05aa9cbf2f2fa809"
 dependencies = [
  "block-buffer",
- "cfg-if",
- "cpufeatures",
  "digest",
+ "keccak",
  "opaque-debug",
 ]
 

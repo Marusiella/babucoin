@@ -4,6 +4,7 @@ extern crate derive_new;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::fmt::{self, Debug, Display};
+use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct Block {
@@ -175,23 +176,11 @@ fn calculate_hash_proof(
     }
     (format!("{:02x}", hasher.finalize()), i)
 }
-fn main() {
-    // let proof = "bab";
-    // let mut blockchin: BlockChain = Blockchain::new();
-    // let s: Transaction = Transaction::new("Main".to_string(), "Mareczekk".to_string(), 1000);
-    // let time = chrono::offset::Utc::now().to_string();
-    // let calc = calculate_hash_proof(1, "".to_string(), time.clone(), vec![s.clone()], proof);
-    // let start: Block = Createblock::new(1, "".to_string(), time, vec![s.clone()], calc.0, calc.1);
-    // blockchin.add_block_thirst(start);
 
-    // end of starrt code
 
-    // let mut transactions = vec![];
 
-    // for x in 0..=9 {
-    //     let a: Transaction = Transaction::new(x.to_string(), (x + 10).to_string(), x + 100);
-    //     transactions.push(a);
-    // }
+#[get("/getblockchain")]
+async fn hello() -> impl Responder {
     let contents = std::fs::read_to_string("blockchain.json")
         .expect("Something went wrong reading the file");
     let bc: BlockChain = serde_json::from_str(&contents).unwrap();
@@ -200,6 +189,25 @@ fn main() {
     } else {
         panic!("Can't valid blockchain.json");
     }
+    HttpResponse::Ok().body(serde_json::to_string(&bc).unwrap())
+}
+#[actix_web::main]
+
+async fn main() -> std::io::Result<()>  {
+    
+    let contents = std::fs::read_to_string("blockchain.json")
+        .expect("Something went wrong reading the file");
+    let bc: BlockChain = serde_json::from_str(&contents).unwrap();
+    if !bc.is_good() {
+        panic!("Can't valid blockchain.json");
+    }
+    HttpServer::new(|| {
+        App::new()
+            .service(hello)
+    })
+    .bind("127.0.0.1:8080")?
+    .run()
+    .await
 }
 
 fn create_pending(blockchin: &mut BlockChain, proof: &str) {
