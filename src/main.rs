@@ -141,6 +141,14 @@ impl BlockChain {
     fn clear_pendding_transactions(&mut self) {
         self.pending_transactions.clear();
     }
+    fn is_good(&self) -> bool {
+        for x in 0..self.blocks.len()-1 {
+            if self.blocks[x].hash != self.blocks[x+1].previus_hash {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 impl Display for Block {
@@ -218,6 +226,7 @@ fn main() {
     
     let json = serde_json::to_string_pretty(&blockchin).unwrap();
     println!("{}", json);
+    println!("{}", blockchin.is_good());
 }
 
 fn create_pending(blockchin: &mut BlockChain, proof: &str) {
