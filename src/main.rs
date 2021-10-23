@@ -6,11 +6,12 @@ use chrono::{DateTime, Utc};
 use serde::{Serialize, Deserialize};
 use std::time::Instant;
 
+
 #[derive(Serialize, Deserialize,Debug, Clone)]
 struct Block {
     index: u64,
     previus_hash: String,
-    timestamp: DateTime<Utc>,
+    timestamp: String,
     data: Vec<Transaction>,
     hash: String,
     proof: Option<u128>,
@@ -53,7 +54,7 @@ trait Create_block {
     fn new(
         index: u64,
         previus_hash: String,
-        timestamp: DateTime<Utc>,
+        timestamp: String,
         data: Vec<Transaction>,
         hash: String,
         proof: u128,
@@ -63,7 +64,7 @@ impl Create_block for Block {
     fn new(
         index: u64,
         previus_hash: String,
-        timestamp: DateTime<Utc>,
+        timestamp: String,
         data: Vec<Transaction>,
         hash: String,
         proof: u128,
@@ -109,7 +110,7 @@ impl BlockChain {
                 .expect("Can't get previous block hash")
                 .hash
                 .clone(),
-                chrono::offset::Utc::now(),
+                chrono::offset::Utc::now().to_string(),
             data.clone(),
             proof,
         );
@@ -127,7 +128,7 @@ impl BlockChain {
                 .expect("Can't get previous block hash")
                 .hash
                 .clone(),
-            timestamp: chrono::offset::Utc::now(),
+            timestamp: chrono::offset::Utc::now().to_string(),
             data,
             hash: calculate_hash,
             proof: Some(proof),
@@ -156,7 +157,7 @@ impl Display for Block {
 fn calculate_hash_proof(
     index: u64,
     previus_hash: String,
-    timestamp: DateTime<Utc>,
+    timestamp: String,
     data: Vec<Transaction>,
     proof: &str,
 ) -> (String, u128) {
@@ -204,16 +205,16 @@ fn main() {
     // hasher.update(before.as_bytes());
 
     // println!("{}",format!("{:02x}",hasher.finalize()));
-    let proof = "0k";
+    let proof = "0";
     let mut blockchin: BlockChain = blockchain::new();
     let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
-    let time = chrono::offset::Utc::now();
-    let calc = calculate_hash_proof(1, "".to_string(), time, vec![s.clone()], proof);
+    let time = chrono::offset::Utc::now().to_string();
+    let calc = calculate_hash_proof(1, "".to_string(), time.clone(), vec![s.clone()], proof);
     let start: Block = Create_block::new(1, "".to_string(), time, vec![s.clone()], calc.0, calc.1);
     blockchin.add_block_thirst(start);
     let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 20);
     blockchin.add_block(vec![s],proof);
-    println!("{:?}", blockchin);
+    println!("{:?}", serde::to_string(&blockchin));
 
     // let (x,y) = calculate_hash_proof(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab0".to_string());
     // println!("Mined {} Diff: {}",x,y);
