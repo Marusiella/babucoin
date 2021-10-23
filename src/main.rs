@@ -58,7 +58,7 @@ fn calculate_hash_proof(index: u64, previus_hash: String, timestamp: std::time::
             // println!("{:02x}", hasher.clone().finalize());
             hasher.update(x.to_string().as_bytes());
         }
-        if x%1000000 == 0 { println!("{}",x)}
+        // if x%1000000 == 0 { println!("{}",x)}
     }
     (format!("{:02x}",hasher.finalize()),i)
 }
@@ -82,8 +82,19 @@ fn main() {
     // hasher.update(before.as_bytes());
     
     // println!("{}",format!("{:02x}",hasher.finalize()));
-    let (x,y) = calculate_hash_proof(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab".to_string());
-    println!("Mined {} {}",x,y);
+    let (x,y) = calculate_hash_proof(1,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab0".to_string());
+    println!("Mined {} Diff: {}",x,y);
+    let (x,y) = calculate_hash_proof(2,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab".to_string());
+    println!("Mined {} Diff: {}",x,y);
+    
+    let (x,y) = calculate_hash_proof(3,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab".to_string());
+    println!("Mined {} Diff: {}",x,y);
+    
+    let (x,y) = calculate_hash_proof(4,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab".to_string());
+    println!("Mined {} Diff: {}",x,y);
+    
+    let (x,y) = calculate_hash_proof(5,"sss".to_string(),std::time::Instant::now(),vec!["dd".to_string()], "bab".to_string());
+    println!("Mined {} Diff: {}",x,y);
     
 
 }
