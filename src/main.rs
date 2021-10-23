@@ -135,6 +135,12 @@ impl BlockChain {
             proof: Some(proof),
         })
     }
+    fn get_pendding_transactions(&self) -> Vec<Transaction> {
+        self.pending_transactions.clone()
+    }
+    fn clear_pendding_transactions(&mut self) {
+        self.pending_transactions.clear();
+    }
 }
 
 impl Display for Block {
@@ -187,8 +193,7 @@ fn calculate_hash_proof(
     (format!("{:02x}", hasher.finalize()), i)
 }
 fn main() {
-
-    let proof = "0ac8";
+    let proof = "0ac877";
     let mut blockchin: BlockChain = Blockchain::new();
     let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
     let time = chrono::offset::Utc::now().to_string();
@@ -197,6 +202,27 @@ fn main() {
     blockchin.add_block_thirst(start);
     let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 20);
     blockchin.add_block(vec![s],proof);
+    let a: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
+    let b: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
+    let c: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
+    let transactions = vec![a,b,c];
+    for x in transactions {
+        blockchin.add_transaction(x);
+    }
+    create_pending(&mut blockchin, proof);
+    
     let json = serde_json::to_string_pretty(&blockchin).unwrap();
     println!("{}", json);
+}
+
+fn create_pending(blockchin: &mut BlockChain, proof: &str) {
+    let mut tran: Vec<Transaction> = Vec::new();
+    for x in blockchin.get_pendding_transactions() {
+        tran.push(x.clone());
+        if tran.len() == 5 {
+            blockchin.add_block(tran.clone(), proof);
+            tran.clear();
+            blockchin.clear_pendding_transactions();            
+        }
+    }
 }
