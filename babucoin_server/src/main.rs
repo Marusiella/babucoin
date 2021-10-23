@@ -1,14 +1,11 @@
 #[macro_use]
 extern crate derive_new;
 
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
+use std::fmt::{self, Debug, Display};
 
-use std::{fmt::{self, Debug, Display}};
-
-use serde::{Serialize, Deserialize};
-
-
-
-#[derive(Serialize, Deserialize,Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 struct Block {
     index: u64,
     previus_hash: String,
@@ -17,13 +14,13 @@ struct Block {
     hash: String,
     proof: Option<u128>,
 }
-#[derive(Serialize, Deserialize,Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 struct BlockChain {
     blocks: Vec<Block>,
     pending_transactions: Vec<Transaction>,
 }
 
-#[derive(Serialize, Deserialize,Debug, Clone, new)]
+#[derive(Serialize, Deserialize, Debug, Clone, new)]
 struct Transaction {
     sender: String,
     reciver: String,
@@ -96,7 +93,7 @@ impl BlockChain {
                 .expect("Can't get previous block hash")
                 .hash
                 .clone(),
-                chrono::offset::Utc::now().to_string(),
+            chrono::offset::Utc::now().to_string(),
             data.clone(),
             proof,
         );
@@ -127,8 +124,8 @@ impl BlockChain {
         self.pending_transactions.clear();
     }
     fn is_good(&self) -> bool {
-        for x in 0..self.blocks.len()-1 {
-            if self.blocks[x].hash != self.blocks[x+1].previus_hash {
+        for x in 0..self.blocks.len() - 1 {
+            if self.blocks[x].hash != self.blocks[x + 1].previus_hash {
                 return false;
             }
         }
@@ -145,7 +142,6 @@ impl Display for Block {
         )
     }
 }
-
 
 fn calculate_hash_proof(
     index: u64,
@@ -165,48 +161,44 @@ fn calculate_hash_proof(
     let steps: u128 = std::u128::MAX;
     let mut i = 0;
     for x in 0..steps {
-
         if format!("{:02x}", hasher.clone().finalize())[..proof.len()] == proof {
-            println!("Mined! : {} difficulty: {}",format!("{:02x}",hasher.clone().finalize()), x);
+            println!(
+                "Mined! : {} difficulty: {}",
+                format!("{:02x}", hasher.clone().finalize()),
+                x
+            );
             i = x;
             break;
         } else {
-
             hasher.update(x.to_string().as_bytes());
         }
-
     }
     (format!("{:02x}", hasher.finalize()), i)
 }
 fn main() {
-    let proof = "b0";
-    let mut blockchin: BlockChain = Blockchain::new();
-    let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
-    let time = chrono::offset::Utc::now().to_string();
-    let calc = calculate_hash_proof(1, "".to_string(), time.clone(), vec![s.clone()], proof);
-    let start: Block = Createblock::new(1, "".to_string(), time, vec![s.clone()], calc.0, calc.1);
-    blockchin.add_block_thirst(start);
-    
+    // let proof = "bab";
+    // let mut blockchin: BlockChain = Blockchain::new();
+    // let s: Transaction = Transaction::new("Main".to_string(), "Mareczekk".to_string(), 1000);
+    // let time = chrono::offset::Utc::now().to_string();
+    // let calc = calculate_hash_proof(1, "".to_string(), time.clone(), vec![s.clone()], proof);
+    // let start: Block = Createblock::new(1, "".to_string(), time, vec![s.clone()], calc.0, calc.1);
+    // blockchin.add_block_thirst(start);
+
     // end of starrt code
 
+    // let mut transactions = vec![];
 
-    let mut transactions = vec![];
-
-    for x in 0..=9 {
-        let a: Transaction = Transaction::new(x.to_string(), (x+10).to_string(), x+100);
-        transactions.push(a);
-    }
-
-    for x in transactions {
-        blockchin.add_transaction(x);
-    }
-    create_pending(&mut blockchin, proof);
-
-    
-    let json = serde_json::to_string_pretty(&blockchin).unwrap();
-    println!("{}", json);
-    if blockchin.is_good() {
-        std::fs::write("json.json", json).expect("Unable to write file");
+    // for x in 0..=9 {
+    //     let a: Transaction = Transaction::new(x.to_string(), (x + 10).to_string(), x + 100);
+    //     transactions.push(a);
+    // }
+    let contents = std::fs::read_to_string("blockchain.json")
+        .expect("Something went wrong reading the file");
+    let bc: BlockChain = serde_json::from_str(&contents).unwrap();
+    if bc.is_good() {
+        println!("Is valid")
+    } else {
+        panic!("Can't valid blockchain.json");
     }
 }
 
@@ -220,7 +212,6 @@ fn create_pending(blockchin: &mut BlockChain, proof: &str) {
         } else if blockchin.clone().get_pendding_transactions().len() < 5 {
             blockchin.add_block(tran.clone(), proof);
             tran.clear();
-            
         }
     }
     blockchin.clear_pendding_transactions();
