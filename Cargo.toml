@@ -11,3 +11,9 @@ derive-new = "*"
 serde = { version = "*", features = ["derive"] }
 chrono = "*"
 serde_json = "*"
+
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+lto = "fat"

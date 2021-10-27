@@ -179,7 +179,7 @@ fn calculate_hash_proof(
     (format!("{:02x}", hasher.finalize()), i)
 }
 fn main() {
-    let proof = "abcdefghij";
+    let proof = "abcdef";
     let mut blockchin: BlockChain = Blockchain::new();
     let s: Transaction = Transaction::new("Olek".to_string(), "Anna".to_string(), 100);
     let time = chrono::offset::Utc::now().to_string();
