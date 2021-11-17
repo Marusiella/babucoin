@@ -11,7 +11,11 @@ derive-new = "*"
 serde = { version = "*", features = ["derive"] }
 chrono = "*"
 serde_json = "*"
-
+# ed25519 = "1.2.0"
+rsa = "*"
+rand = "*"
+openssl = "*"
+hex = "*"
 
 [profile.release]
 opt-level = 3

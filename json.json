@@ -1,86 +1,19 @@
 {
   "blocks": [
     {
-      "index": 1,
+      "index": 0,
       "previus_hash": "",
-      "timestamp": "2021-10-27 15:46:49.679747330 UTC",
+      "timestamp": "1637169568434",
       "data": [
         {
-          "sender": "Olek",
-          "reciver": "Anna",
-          "amount": 100
+          "sender": "2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d4947664d413047435371475349623344514542415155414134474e4144434269514b426751446855564a4c56785338565848612b5a4e4a30476f6d33574d490a796846534c5a6850376f2f63353071596e36637a396d685935384f316d53727751553467524c474a4357573848666e7656522f447543597859646472497476450a466141663863304164427278304d7976446664494e6f36564e4a476b634969394670723167577452445373756e44784b57487a6a727468566435634b415249380a54326b6d7a677a4c4969646e7a32683761774944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a",
+          "reciver": "2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d4947664d413047435371475349623344514542415155414134474e4144434269514b4267514377784f4773547370304e574e7261417a667274325166394d740a4b734b7531576b516c514278303657637878336250682b773443324e4c2f76363574476969455037346d7a4e56424b4c334c4c5956355a4a706b382f6a7647500a55324235596f324242724f38334348545a364f676f454673596c444e584e685945546553754763764456312f6771565057346a39617266724449354c334c706a0a6368674a6e544d474444687166504e7537774944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d0a",
+          "amount": 22,
+          "hash": "d06bc186dfb8b4d9f238f9f5cb2502793845d82b17e98a47b310a28385876c7303f29722f95e9d16c4c2aa29bcd7655dc8705c5f6eb39a9d59679ac0679412c4"
         }
       ],
-      "hash": "abcdefeaa36769931110a76e6fc5dea02e964d7183371ab9605a444275c70c799ffdcc2542680cab7ba6313d64fec4d5b576d45d364ebfaadbe8cf781347de7e",
-      "proof": 18989158
-    },
-    {
-      "index": 2,
-      "previus_hash": "abcdefeaa36769931110a76e6fc5dea02e964d7183371ab9605a444275c70c799ffdcc2542680cab7ba6313d64fec4d5b576d45d364ebfaadbe8cf781347de7e",
-      "timestamp": "2021-10-27 15:47:24.222857985 UTC",
-      "data": [
-        {
-          "sender": "0",
-          "reciver": "10",
-          "amount": 100
-        },
-        {
-          "sender": "1",
-          "reciver": "11",
-          "amount": 101
-        },
-        {
-          "sender": "2",
-          "reciver": "12",
-          "amount": 102
-        },
-        {
-          "sender": "3",
-          "reciver": "13",
-          "amount": 103
-        },
-        {
-          "sender": "4",
-          "reciver": "14",
-          "amount": 104
-        }
-      ],
-      "hash": "abcdef1f936b4b52b3c07539541120fbd5970b432ea3d9723b0cdb6e68a9de84675710afa6b0453f4a3690ee19cd90c60b4fd91d298fd6c396f62c939682be70",
-      "proof": 39075378
-    },
-    {
-      "index": 3,
-      "previus_hash": "abcdef1f936b4b52b3c07539541120fbd5970b432ea3d9723b0cdb6e68a9de84675710afa6b0453f4a3690ee19cd90c60b4fd91d298fd6c396f62c939682be70",
-      "timestamp": "2021-10-27 15:47:54.305294326 UTC",
-      "data": [
-        {
-          "sender": "5",
-          "reciver": "15",
-          "amount": 105
-        },
-        {
-          "sender": "6",
-          "reciver": "16",
-          "amount": 106
-        },
-        {
-          "sender": "7",
-          "reciver": "17",
-          "amount": 107
-        },
-        {
-          "sender": "8",
-          "reciver": "18",
-          "amount": 108
-        },
-        {
-          "sender": "9",
-          "reciver": "19",
-          "amount": 109
-        }
-      ],
-      "hash": "abcdef39a7a836680db69087a925f99362bdeea7b33869586c49d282a9e2b813a5fa47c0e5cae64f252540b0ef3e573a6bdbf31cb39ef14174aef61decaff3b6",
-      "proof": 51535541
+      "hash": "0a0f2212ec6f901fb54cb4c36abe216c0765812c73b7e58b7723c2939893d7e72f60072dcf212b53764d6f062155af4b1f09d164f93320a51a27ea8aeff76edf",
+      "proof": 3
     }
   ],
   "pending_transactions": []
